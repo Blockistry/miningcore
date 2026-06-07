@@ -2,7 +2,9 @@
 
 ## June 2026 — OpenTelemetry tracing + NLog async wrappers
 
-Added OpenTelemetry distributed tracing with OTLP export support. Set the `OTEL_EXPORTER_OTLP_ENDPOINT` env var to pipe traces to Jaeger/Grafana Tempo/any OTel collector. When unset, `AlwaysOffSampler` ensures zero overhead — no spans created, no allocations. Traced the stratum request pipeline. Also wrapped all NLog `FileTarget` instances with `AsyncTargetWrapper` (queue limit 10k, overflow discard, batch 100/200ms) to prevent threadpool starvation from slow disk writes during high-volume logging.
+Added OpenTelemetry distributed tracing with OTLP export support. Set `OTEL_EXPORTER_OTLP_ENDPOINT` to pipe traces to Jaeger/Grafana Tempo/any OTel collector. When unset, `AlwaysOffSampler` ensures zero overhead. Traced the stratum request pipeline (`stratum.request` span with method + connection_id tags). Also wrapped all NLog `FileTarget` instances with `AsyncTargetWrapper` (queue 10k, discard on overflow, batch 100/200ms) to prevent threadpool starvation from disk writes.
+
+**Verified end-to-end with Jaeger all-in-one v1.57 via Docker** — `miningcore` service registered, `stratum.request` spans visible in Jaeger UI with correct tags. Uses gRPC on port 4317.
 
 See: [Optimization: OpenTelemetry + NLog Async](optimizations/03-opentelemetry-nlog-async.md)
 
