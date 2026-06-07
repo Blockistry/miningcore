@@ -28,6 +28,7 @@ using Miningcore.Mining;
 using Miningcore.Notifications;
 using Miningcore.Payments;
 using Miningcore.Payments.PaymentSchemes;
+using Miningcore.Persistence.Postgres;
 using Miningcore.Time;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -79,6 +80,9 @@ public class AutofacModule : Module
 
         builder.RegisterType<IntegratedBanManager>()
             .Keyed<IBanManager>(BanManagerKind.Integrated)
+            .SingleInstance();
+
+        builder.RegisterType<PartitionManager>()
             .SingleInstance();
 
         builder.RegisterAssemblyTypes(ThisAssembly)

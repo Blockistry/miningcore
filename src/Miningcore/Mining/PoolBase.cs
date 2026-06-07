@@ -15,6 +15,7 @@ using Miningcore.Messaging;
 using Miningcore.Nicehash;
 using Miningcore.Notifications.Messages;
 using Miningcore.Persistence;
+using Miningcore.Persistence.Postgres;
 using Miningcore.Persistence.Repositories;
 using Miningcore.Stratum;
 using Miningcore.Time;
@@ -58,6 +59,7 @@ public abstract class PoolBase : StratumServer,
         this.statsRepo = statsRepo;
         this.mapper = mapper;
         this.nicehashService = nicehashService;
+        partitionManager = ctx.Resolve<PartitionManager>();
     }
 
     protected PoolStats poolStats = new();
@@ -68,6 +70,7 @@ public abstract class PoolBase : StratumServer,
     protected readonly IStatsRepository statsRepo;
     protected readonly IMapper mapper;
     protected readonly NicehashService nicehashService;
+    protected readonly PartitionManager partitionManager;
     protected readonly CompositeDisposable disposables = new();
     protected BlockchainStats blockchainStats;
     protected static readonly TimeSpan maxShareAge = TimeSpan.FromSeconds(6);
@@ -415,6 +418,7 @@ Pool Fee:               {(poolConfig.RewardRecipients?.Any() == true ? poolConfi
         {
             SetupBanManagement();
 
+            await partitionManager.EnsureSharesPartitionAsync(poolConfig.Id, ct);
             await SetupJobManager(ct);
             await InitStatsAsync(ct);
 

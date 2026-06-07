@@ -1,5 +1,11 @@
 # Changelog
 
+## June 2026 — Automated share table partitioning
+
+When the `shares` table is partitioned by `poolId`, miningcore now creates the partition for each pool automatically on startup. No more manual SQL every time you add a pool — just add it to `config.json` and restart. Skips silently if the table isn't partitioned (plain `createdb.sql` setup) or if the partition already exists.
+
+See: [Feature: Automatic Partitioning](features/auto-partitioning.md)
+
 ## June 2026 — OpenTelemetry tracing + NLog async wrappers
 
 Added OpenTelemetry distributed tracing with OTLP export support. Set `OTEL_EXPORTER_OTLP_ENDPOINT` to pipe traces to Jaeger/Grafana Tempo/any OTel collector. When unset, `AlwaysOffSampler` ensures zero overhead. Traced the stratum request pipeline (`stratum.request` span with method + connection_id tags). Also wrapped all NLog `FileTarget` instances with `AsyncTargetWrapper` (queue 10k, discard on overflow, batch 100/200ms) to prevent threadpool starvation from disk writes.
