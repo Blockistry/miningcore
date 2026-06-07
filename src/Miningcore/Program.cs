@@ -625,13 +625,29 @@ public class Program : BackgroundService
     private static void Logo()
     {
         Console.WriteLine(@"
- ███╗   ███╗██╗███╗   ██╗██╗███╗   ██╗ ██████╗  ██████╗ ██████╗ ██████╗ ███████╗
- ████╗ ████║██║████╗  ██║██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗██╔══██╗██╔════╝
- ██╔████╔██║██║██╔██╗ ██║██║██╔██╗ ██║██║  ███╗██║     ██║   ██║██████╔╝█████╗
- ██║╚██╔╝██║██║██║╚██╗██║██║██║╚██╗██║██║   ██║██║     ██║   ██║██╔══██╗██╔══╝
- ██║ ╚═╝ ██║██║██║ ╚████║██║██║ ╚████║╚██████╔╝╚██████╗╚██████╔╝██║  ██║███████╗
+ ██████   ██████   █████████    █████████  ██████████
+▒▒██████ ██████   ███▒▒▒▒▒███  ███▒▒▒▒▒███▒▒███▒▒▒▒▒█
+ ▒███▒█████▒███  ███     ▒▒▒  ███     ▒▒▒  ▒███  █ ▒ 
+ ▒███▒▒███ ▒███ ▒███         ▒███          ▒██████   
+ ▒███ ▒▒▒  ▒███ ▒███         ▒███          ▒███▒▒█   
+ ▒███      ▒███ ▒▒███     ███▒▒███     ███ ▒███ ▒   █
+ █████     █████ ▒▒█████████  ▒▒█████████  ██████████
+▒▒▒▒▒     ▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒    ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒ 
+
+Miningcore Community Edition
+Miningcore Community Edition (MCCE) is a modernized, actively maintained continuation of Miningcore.
+It features full support for .NET 8 and Ubuntu 24.04, offering better performance and stability compared to the original Oliverw Miningcore repository (which has been outdated, discontinued, and archived since 2022)
+
+https://github.com/soosho/miningcore
+
+Donation:
+btc: 1AqqFf13RcfGbwa4GQGQV27T6HL1r35WVk
+bch: 1AqqFf13RcfGbwa4GQGQV27T6HL1r35WVk
+eth: 0xbd9bf193bf6ba5bf0dc25418e96082580fb9498f
+bnb: 0xbd9bf193bf6ba5bf0dc25418e96082580fb9498f
+ltc: La2a5YZH3dDJh1L8tTRKk3zz2zUwtYfeHj
+doge: DCMuGWx62HoW6mKVsvfkvuqqqYpsWevfod
 ");
-        Console.WriteLine(" https://github.com/soosho\n");
         Console.WriteLine();
     }
 

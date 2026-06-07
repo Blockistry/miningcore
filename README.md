@@ -238,6 +238,15 @@ Once again, do not run a production pool on Windows! This is not a supported con
 
 To support this project you can become a [sponsor]( https://github.com/sponsors/soosho ) or send a donation to the following accounts:
 
+### Miningcore Community Edition (MCCE) (soosho)
+* BTC:   `1AqqFf13RcfGbwa4GQGQV27T6HL1r35WVk`
+* BCH:   `1AqqFf13RcfGbwa4GQGQV27T6HL1r35WVk`
+* ETH:   `0xbd9bf193bf6ba5bf0dc25418e96082580fb9498f`
+* BNB:   `0xbd9bf193bf6ba5bf0dc25418e96082580fb9498f`
+* LTC:   `La2a5YZH3dDJh1L8tTRKk3zz2zUwtYfeHj`
+* DOGE:  `DCMuGWx62HoW6mKVsvfkvuqqqYpsWevfod`
+
+### Original Developer (oliverw)
 * ETH:   `0xbC059e88A4dD11c2E882Fc6B83F8Ec12E4CCCFad`
 * BTC:   `16xvkGfG9nrJSKKo5nGWphP8w4hr2ZzVuw`
 * LTC:   `LLs76baYT7iMqQhizxtBC96Cy48iX3Eh1p`
