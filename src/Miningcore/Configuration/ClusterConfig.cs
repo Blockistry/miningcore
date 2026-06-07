@@ -914,6 +914,14 @@ public partial class ClusterLoggingConfig
     public bool PerPoolLogFile { get; set; }
     public string LogBaseDirectory { get; set; }
     public bool GPDRCompliant { get; set; }
+
+    /// <summary>
+    /// OpenTelemetry OTLP endpoint for distributed tracing.
+    /// Example: "http://localhost:4317"
+    /// When set, traces are exported to this collector (Jaeger, Grafana Tempo, etc).
+    /// When unset (or empty), tracing is disabled with zero overhead.
+    /// </summary>
+    public string OtlpEndpoint { get; set; }
 }
 
 public partial class NetworkEndpointConfig

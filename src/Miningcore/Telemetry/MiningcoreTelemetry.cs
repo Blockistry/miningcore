@@ -21,23 +21,20 @@ public static class MiningcoreTelemetry
 
     /// <summary>
     /// Adds OpenTelemetry tracing to the service collection.
-    ///
-    /// Traces are exported via OTLP when OTEL_EXPORTER_OTLP_ENDPOINT is set.
-    /// Sampling and other OTel env vars are honoured automatically when set.
-    /// When no endpoint is set, AlwaysOffSampler guarantees zero overhead.
-    ///
-    /// Standard env vars:
-    ///   OTEL_EXPORTER_OTLP_ENDPOINT   default http://localhost:4317
-    ///   OTEL_TRACES_SAMPLER            parentbased_traceidratio
-    ///   OTEL_TRACES_SAMPLER_ARG        0.1
     /// </summary>
-    public static IServiceCollection AddMiningcoreTelemetry(this IServiceCollection services)
+    /// <param name="otlpEndpoint">
+    /// OTLP collector endpoint (e.g. "http://localhost:4317").
+    /// When null or empty, tracing is disabled with zero overhead (AlwaysOffSampler).
+    /// Falls back to OTEL_EXPORTER_OTLP_ENDPOINT env var if set in config but not provided.
+    /// </param>
+    public static IServiceCollection AddMiningcoreTelemetry(this IServiceCollection services, string otlpEndpoint = null)
     {
-        var otlpEndpoint = Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT");
+        if(string.IsNullOrEmpty(otlpEndpoint))
+            otlpEndpoint = Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT");
 
         if(string.IsNullOrEmpty(otlpEndpoint))
         {
-            // No OTLP endpoint — zero overhead AlwaysOffSampler
+            // No endpoint — zero overhead AlwaysOffSampler
             services.AddOpenTelemetry()
                 .WithTracing(builder => builder
                     .SetResourceBuilder(ResourceBuilder.CreateDefault()

@@ -137,7 +137,7 @@ public class Program : BackgroundService
                 {
                     services.AddHttpClient();
                     services.AddMemoryCache();
-                    services.AddMiningcoreTelemetry();
+                    services.AddMiningcoreTelemetry(clusterConfig.Logging?.OtlpEndpoint);
 
                     ConfigureBackgroundServices(services);
 
