@@ -277,7 +277,10 @@ public class Program : BackgroundService
                 adminPanelTask = adminApp.RunAsync();
             }
 
-            await Task.WhenAny(host.RunAsync(), adminPanelTask);
+            if(clusterConfig.AdminPanel?.Enabled == true)
+                await Task.WhenAny(host.RunAsync(), adminPanelTask);
+            else
+                await host.RunAsync();
         }
 
         catch(PoolStartupException ex)
@@ -699,15 +702,23 @@ public class Program : BackgroundService
             // Api Log
             if(!string.IsNullOrEmpty(config.ApiLogFile) && !isShareRecoveryMode)
             {
-                var target = new FileTarget("file")
+                var target = new FileTarget("api-file")
                 {
                     FileName = GetLogPath(config, config.ApiLogFile),
                     FileNameKind = FilePathKind.Unknown,
                     Layout = layout
                 };
 
-                loggingConfig.AddTarget(target);
-                loggingConfig.AddRule(level, NLog.LogLevel.Fatal, target, "Microsoft.AspNetCore.*", true);
+                var asyncTarget = new AsyncTargetWrapper(target)
+                {
+                    QueueLimit = 10000,
+                    OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
+                    BatchSize = 100,
+                    TimeToSleepBetweenBatches = 200
+                };
+
+                loggingConfig.AddTarget(asyncTarget);
+                loggingConfig.AddRule(level, NLog.LogLevel.Fatal, asyncTarget, "Microsoft.AspNetCore.*", true);
             }
 
             if(config.EnableConsoleLog || isShareRecoveryMode)
@@ -761,15 +772,23 @@ public class Program : BackgroundService
 
             if(!string.IsNullOrEmpty(config.LogFile) && !isShareRecoveryMode)
             {
-                var target = new FileTarget("file")
+                var target = new FileTarget("main-file")
                 {
                     FileName = GetLogPath(config, config.LogFile),
                     FileNameKind = FilePathKind.Unknown,
                     Layout = layout
                 };
 
-                loggingConfig.AddTarget(target);
-                loggingConfig.AddRule(level, NLog.LogLevel.Fatal, target);
+                var asyncTarget = new AsyncTargetWrapper(target)
+                {
+                    QueueLimit = 10000,
+                    OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
+                    BatchSize = 100,
+                    TimeToSleepBetweenBatches = 200
+                };
+
+                loggingConfig.AddTarget(asyncTarget);
+                loggingConfig.AddRule(level, NLog.LogLevel.Fatal, asyncTarget);
             }
 
             if(config.PerPoolLogFile && !isShareRecoveryMode)
@@ -783,13 +802,20 @@ public class Program : BackgroundService
                         Layout = layout
                     };
 
-                    loggingConfig.AddTarget(target);
-                    loggingConfig.AddRule(level, NLog.LogLevel.Fatal, target, poolConfig.Id);
+                    var asyncTarget = new AsyncTargetWrapper(target)
+                    {
+                        QueueLimit = 10000,
+                        OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
+                        BatchSize = 100,
+                        TimeToSleepBetweenBatches = 200
+                    };
+
+                    loggingConfig.AddTarget(asyncTarget);
+                    loggingConfig.AddRule(level, NLog.LogLevel.Fatal, asyncTarget, poolConfig.Id);
                 }
             }
 
-            // Wrap file targets with async wrappers to prevent disk I/O from blocking threads
-            WrapFileTargetsWithAsync(loggingConfig);
+            // All file targets are already async-wrapped above; no need for post-hoc WrapFileTargetsWithAsync
         }
 
         LogManager.Configuration = loggingConfig;
