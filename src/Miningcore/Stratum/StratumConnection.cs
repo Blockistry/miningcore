@@ -464,7 +464,7 @@ public class StratumConnection
                             reader.Read();
                             var start = (int) reader.TokenStartIndex;
                             reader.Skip();
-                            var end = (int) reader.TokenStartIndex;
+                            var end = (int) reader.TokenStartIndex + 1;
                             paramsSlice = jsonSlice.Slice(start, end - start);
                         }
                     }
@@ -501,7 +501,9 @@ public class StratumConnection
                             reader.Read();
                             var start = (int) reader.TokenStartIndex;
                             reader.Skip();
-                            var end = (int) reader.TokenStartIndex;
+                            // TokenStartIndex on EndObject token points to `}`, not after it.
+                            // We need one byte past it to include the closing brace.
+                            var end = (int) reader.TokenStartIndex + 1;
                             paramsSlice = new ReadOnlySequence<byte>(arr).Slice(start, end - start);
                         }
                     }
