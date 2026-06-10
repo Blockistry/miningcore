@@ -1091,6 +1091,13 @@ public class PoolEndpoint
     /// Certificate file password
     /// </summary>
     public string TlsPfxPassword { get; set; }
+
+    /// <summary>
+    /// TCP listen backlog. Defaults to 32 if not set.
+    /// Lower = reject overflow faster (better DDoS protection).
+    /// Higher = accept more queued connections (better for large pools).
+    /// </summary>
+    public int? TcpBacklog { get; set; }
 }
 
 public partial class VarDiffConfig

@@ -103,7 +103,7 @@ public abstract class StratumServer
             var server = new Socket(SocketType.Stream, ProtocolType.Tcp);
             server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             server.Bind(port.IPEndPoint);
-            server.Listen();
+            server.Listen(port.PoolEndpoint.TcpBacklog ?? 32);
 
             return Listen(server, port, ct);
         }).ToArray();
@@ -120,6 +120,13 @@ public abstract class StratumServer
             try
             {
                 var socket = await server.AcceptAsync(ct);
+
+                var remoteEndpoint = socket.RemoteEndPoint as IPEndPoint;
+                if(remoteEndpoint != null && !banManager.ThrottleConnect(remoteEndpoint.Address))
+                {
+                    socket.Close();
+                    continue;
+                }
 
                 AcceptConnection(socket, port, cert, ct);
             }
@@ -234,7 +241,7 @@ public abstract class StratumServer
                 if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                 {
                     logger.Info(() => $"[{connection.ConnectionId}] Banning client for sending junk");
-                    banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
+                    banManager?.EscalateBan(connection.RemoteEndpoint.Address);
                 }
                 break;
 
@@ -245,7 +252,7 @@ public abstract class StratumServer
                 if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                 {
                     logger.Info(() => $"[{connection.ConnectionId}] Banning client for failing SSL handshake");
-                    banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
+                    banManager?.EscalateBan(connection.RemoteEndpoint.Address);
                 }
                 break;
 
@@ -258,7 +265,7 @@ public abstract class StratumServer
                     if(clusterConfig.Banning?.BanOnJunkReceive.HasValue == false || clusterConfig.Banning?.BanOnJunkReceive == true)
                     {
                         logger.Info(() => $"[{connection.ConnectionId}] Banning client for failing SSL handshake");
-                        banManager?.Ban(connection.RemoteEndpoint.Address, TimeSpan.FromMinutes(3));
+                        banManager?.EscalateBan(connection.RemoteEndpoint.Address);
                     }
                 }
                 break;
