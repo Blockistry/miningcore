@@ -242,6 +242,10 @@ public class Program : BackgroundService
 
                         app.UseMiddleware<ApiRequestMetricsMiddleware>();
 
+                        // MCCE fingerprint — hidden response header for fork detection
+                        // (not present in original miningcore)
+                        app.UseMiddleware<MCCEFingerprintMiddleware>();
+
                         app.UseRouting();
                         app.UseEndpoints(endpoints =>
                         {
