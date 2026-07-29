@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -40,16 +41,16 @@ public class CoinTemplateValidationTest : TestBase
                 case BitcoinTemplate bt when t is BitcoinTemplate:
                 {
                     if(bt.CoinbaseHasher != null)
-                        Assert.Null(RecordExceptionOrSkip(bt.CoinbaseHasherValue, t));
+                        Assert.Null(RecordExceptionOrSkip(() => bt.CoinbaseHasherValue, t));
 
                     if(bt.HeaderHasher != null)
-                        Assert.Null(RecordExceptionOrSkip(bt.HeaderHasherValue, t));
+                        Assert.Null(RecordExceptionOrSkip(() => bt.HeaderHasherValue, t));
 
                     if(bt.BlockHasher != null)
-                        Assert.Null(RecordExceptionOrSkip(bt.BlockHasherValue, t));
+                        Assert.Null(RecordExceptionOrSkip(() => bt.BlockHasherValue, t));
 
                     if(bt.PoSBlockHasher != null)
-                        Assert.Null(RecordExceptionOrSkip(bt.PoSBlockHasherValue, t));
+                        Assert.Null(RecordExceptionOrSkip(() => bt.PoSBlockHasherValue, t));
                     break;
                 }
 
