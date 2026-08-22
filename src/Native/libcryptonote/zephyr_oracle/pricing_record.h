@@ -88,6 +88,7 @@ namespace zephyr_oracle
       uint64_t reserve_ma;
       uint64_t reserve_ratio;
       uint64_t reserve_ratio_ma;
+      uint64_t yield_price;
       uint64_t timestamp;
       unsigned char signature[64];
 
